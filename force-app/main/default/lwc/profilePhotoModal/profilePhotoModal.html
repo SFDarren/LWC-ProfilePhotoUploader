@@ -1,0 +1,74 @@
+<template>
+    <lightning-modal-header label="Update Photo"></lightning-modal-header>
+    <lightning-modal-body>
+        <div class="slds-text-align_center slds-is-relative">
+
+            <template lwc:if={showSpinner}>
+                <lightning-spinner variant="brand"></lightning-spinner>
+            </template>
+            <div class="slds-p-bottom_x-small" style="font-size: 0.8125rem;">
+                You can upload a JPG or PNG file. Maximum file size is 16 MB.
+            </div>  
+            <!-- lightning input accepts only up to 3.5MB, whereas lightning file upload has dropzone-->
+            <div class="slds-form-element slds-p-bottom--x-small">
+                <span class="slds-form-element__label" id="file-selector-primary-label-113">Attachment</span>
+                <div class="slds-form-element__control">
+                  <div class="slds-file-selector slds-file-selector_files">
+                      <input type="file" class="slds-file-selector__input slds-assistive-text" accept=".png, .jpg, .jpeg" onchange={handleFileUpload} id="file-upload-input-115" aria-labelledby="file-selector-primary-label-113 file-selector-secondary-label114" />
+                      <label class="slds-file-selector__body" for="file-upload-input-115" id="file-selector-secondary-label114">
+                        <span class="slds-file-selector__button slds-button slds-button_neutral">
+                            <lightning-icon icon-name="utility:upload" alternative-text="Upload" class="slds-p-right_x-small"
+                                title="Upload" size="x-small" style="--sds-c-icon-color-foreground-default: #0275bf;"></lightning-icon>
+                            Upload Image
+                        </span>
+                      </label>
+                  </div>
+                </div>
+            </div>
+            <template lwc:if={uploadedImage}>
+                <div class="preview">
+                    <div lwc:ref="uploadedContainer" style="position: absolute; top: 50px; left: 50px;">
+                        <img class="uploaded" lwc:ref="uploaded" src={uploadedImageUrl} onload={handleImageLoad} style="max-width: initial;">
+                    </div>
+                    <div tabindex="-1" style="z-index: 1; display: inline; position: relative;">
+                        <div class="test" draggable style="height: 100%; width: 100%;" onmousedown={handleMouseDown}></div>
+                    </div>
+                </div>
+                <template lwc:if={ratioLessThanOne}>
+                    <div class="slds-m-vertical_xxx-small slds-m-top_xx-small slds-text-align_center">
+                        <div style="font-size: 0.8125rem; margin-bottom: 0.5rem;">Drag and resize to adjust thumbnail.</div>
+                        <div class="slds-grid slds-grid_vertical-align-center slds-align-content-center">
+                            <lightning-icon class="slds-m-horizontal_x-small" icon-name="utility:image" size="xx-small"></lightning-icon>
+                            <div class="slds-p-horizontal_small slds-p-vertical_small" style="border: 1px solid lightgrey; border-radius: 5px; width: 220px;">
+                                <!-- lightning slider cannot hide value? -->
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__control">
+                                      <div class="slds-slider">
+                                        <input type="range" id="slider-id-2" class="slds-slider__range" value={zoomed} oninput={handleZoom}/>
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <lightning-icon class="slds-m-horizontal_x-small" icon-name="utility:image" size="small"></lightning-icon>
+                        </div>
+                    </div>
+                </template>
+            </template>
+            <template lwc:else>
+                <div style="font-size: 0.8125rem;">
+                    Current Photo:
+                </div>
+                <div style="border: 1px solid transparent; margin: 0 auto;">
+                    <img src={currentPhotoUrl}>
+                </div>
+            </template>
+            <lightning-input type="checkbox" label="Show my photo on publicly accessible pages" style="font-size: 0.8125rem;"></lightning-input>
+        </div>
+        <!-- canvas to draw cropped image, doesn't have to be rendered hence slds-hide -->
+        <canvas lwc:ref="canvas" class="slds-hide" width="190" height="190"></canvas>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button disabled={disableButtons} label="Cancel" class="slds-p-right_x-small" onclick={handleCancel}></lightning-button>
+        <lightning-button disabled={disableButtons} label="Save" variant="brand" onclick={handleSave}></lightning-button>
+    </lightning-modal-footer>
+</template>

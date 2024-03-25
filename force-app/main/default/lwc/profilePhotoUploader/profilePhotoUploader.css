@@ -1,0 +1,12 @@
+.photoIcon {
+    padding: 1px;
+    width: 16px;
+    height: 16px;
+    bottom: 11%;
+    right: 8%;
+    position: absolute;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: var(--lwc-borderRadiusSmall, 0.125rem);
+    color: rgb(74, 74, 74);
+    line-height: 0;
+}
